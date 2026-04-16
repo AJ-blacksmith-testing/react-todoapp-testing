@@ -31,7 +31,11 @@ jobs:
         with:
           node-version: 18
           cache: npm
-
+      
+      - name: Build
+        run: npm run build
+        env:
+          NODE_OPTIONS: --openssl-legacy-provider
 
       # Runs a single command using the runners shell
       - name: Install
