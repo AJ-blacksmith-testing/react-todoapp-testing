@@ -23,39 +23,40 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v4
 
-      # Setup Node 18 which is compatible with this app
+      # Sets up Node.js environment
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
           cache: npm
+
+      # Installs dependencies
+      - name: Install
+        run: npm ci
       
+      # Runs type checking
+      - name: Type checking
+        run: npm run typecheck
+      
+      # Runs linter
+      - name: Linting
+        run: npm run lint:fix
+                
+      # Runs tests
+      - name: Run tests
+        run: npm run test:once
+        
+      # Builds the app
       - name: Build
         run: npm run build
         env:
           NODE_OPTIONS: --openssl-legacy-provider
-
-      # Runs a single command using the runners shell
-      - name: Install
-        run: npm ci
-      
-      - name: Type checking
-        run: npm run typecheck
-      
-      - name: Linting
-        run: npm run lint:fix
-                
-      - name: Run tests
-        run: npm run test:once
         
-      - name: Build
-        run: npm run build
-        
+      # Deploys to GitHub Pages
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.1
         with:
           branch: gh-pages # The branch the action should deploy to.
           folder: build # The folder the action should deploy.
-        
